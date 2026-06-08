@@ -903,9 +903,6 @@ export async function runQaSuiteCommand(opts: QaSuiteCommandOptions) {
   if (opts.preflight === true && runner !== "host") {
     throw new Error("--preflight requires --runner host.");
   }
-  if (channelDriver === "crabline" && runner !== "host") {
-    throw new Error("--channel-driver crabline requires --runner host.");
-  }
   const selectedScenarioChannel =
     channelDriver === "crabline"
       ? resolveQaSuiteScenarioChannel({
@@ -956,6 +953,8 @@ export async function runQaSuiteCommand(opts: QaSuiteCommandOptions) {
         ? { concurrency: parseQaPositiveIntegerOption("--concurrency", opts.concurrency) }
         : {}),
       ...(runtimePair ? { runtimePair } : {}),
+      ...(channelDriverSelection ? { channelDriverSelection } : {}),
+      ...(opts.enabledPluginIds !== undefined ? { enabledPluginIds: opts.enabledPluginIds } : {}),
       image: opts.image,
       cpus: parseQaPositiveIntegerOption("--cpus", opts.cpus),
       memory: opts.memory,
